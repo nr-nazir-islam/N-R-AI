@@ -13,9 +13,6 @@ jobs:
     name: Build Android APK (llama.cpp)
     runs-on: ubuntu-24.04
     timeout-minutes: 90
-    env:
-      ANDROID_HOME: /usr/local/lib/android/sdk
-      ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
     steps:
       - name: Checkout N-R-AI
         uses: actions/checkout@v4
@@ -33,14 +30,17 @@ jobs:
           distribution: temurin
           java-version: "17"
 
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v4
+        with:
+          packages: ''
+
       - name: Install Android SDK packages
         run: |
-          yes | "${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager" --licenses
-          "${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager" "platform-tools"
-          "${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36"
-          "${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager" "build-tools;36.0.0"
-          "${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager" "ndk;29.0.13113456"
-          "${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager" "cmake;3.31.6"
+          sdkmanager "platforms;android-36"
+          sdkmanager "build-tools;36.0.0"
+          sdkmanager "ndk;29.0.13113456"
+          sdkmanager "cmake;3.31.6"
 
       - name: Build APK
         working-directory: llama.cpp/examples/llama.android
