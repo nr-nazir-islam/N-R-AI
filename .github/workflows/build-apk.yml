@@ -10,19 +10,24 @@ permissions:
 
 jobs:
   build:
-    name: Build Android APK (llama.cpp)
+    name: Build N-R-AI Android model app
     runs-on: ubuntu-24.04
     timeout-minutes: 90
     steps:
       - name: Checkout N-R-AI
         uses: actions/checkout@v4
 
-      - name: Checkout official llama.cpp
+      - name: Checkout llama.cpp Android app and engine
         uses: actions/checkout@v4
         with:
           repository: ggml-org/llama.cpp
           ref: master
           path: llama.cpp
+
+      - name: Brand app as N-R-AI
+        run: |
+          sed -i 's#<string name="app_name">.*</string>#<string name="app_name">N-R-AI</string>#' llama.cpp/examples/llama.android/app/src/main/res/values/strings.xml
+          sed -i 's/applicationId = "com.example.llama.aichat"/applicationId = "com.nazir.nrai"/' llama.cpp/examples/llama.android/app/build.gradle.kts
 
       - name: Set up Java 17
         uses: actions/setup-java@v4
@@ -51,12 +56,12 @@ jobs:
       - name: Prepare artifact
         run: |
           mkdir -p output
-          cp llama.cpp/examples/llama.android/app/build/outputs/apk/debug/app-debug.apk output/N-R-AI-debug.apk
+          cp llama.cpp/examples/llama.android/app/build/outputs/apk/debug/app-debug.apk output/N-R-AI.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: N-R-AI-Android-APK
-          path: output/N-R-AI-debug.apk
+          path: output/N-R-AI.apk
           if-no-files-found: error
           retention-days: 14
