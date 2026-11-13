@@ -1,4 +1,6 @@
 # N-R-AI for Android
+#APK DOWNLOAD LINK
+#https://github.com/nr-nazir-islam/N-R-AI/releases/tag/v1.0.0
 
 N-R-AI is an offline GGUF chat app for Android. The APK contains the application and inference engine; it does not bundle a language model.
 
